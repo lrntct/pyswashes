@@ -1,0 +1,4 @@
+pyswashes.egg-info/
+build/
+dist/
+*.pyc
