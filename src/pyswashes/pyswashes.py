@@ -13,32 +13,57 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys, os
+import shutil
 from io import StringIO
 import subprocess
 
 import pandas
 
+
+
 class SWASHES(object):
     """An interface to a SWASHES analytic solution
     """
-    def __init__(self, swashes_bin, dimension, stype, domain, choice,
-                 NumberCellx, NumberCelly=None):
-        self.sbin = swashes_bin
-        self.params = [str(dimension), str(stype), str(domain),
-                       str(choice), str(NumberCellx)]
-        if NumberCelly is not None:
-            self.params.append(NumberCelly)
-        self.out = []
+    DIMENSION_OK = [1., 1.5, 2.]
 
-    def compute(self):
+    def __init__(self, dimension, stype, domain, choice,
+                 num_cell_x, num_cell_y=None, swashes_bin='swashes'):
+        # input sanity check
+        if float(dimension) not in self.DIMENSION_OK:
+            raise ValueError("<dimension> must be in ".format(self.DIMENSION_OK))
+        input_int = [stype, domain, choice, num_cell_x]
+        if num_cell_y is not None:
+           input_int.append(num_cell_y)
+        if not all(isinstance(p, int) for p in input_int):
+            raise ValueError("<dimension>, <stype>, <domain>, <choice>, "
+                             "<num_cell_x>, <num_cell_y> must be integer.")
+        if int(dimension) == 2 and not num_cell_y:
+            raise ValueError("bidimensional solutions need a positive <num_cell_y>")
+        self.params = [dimension] + input_int
+
+        # check if the executable exists
+        if not shutil.which(swashes_bin):
+            raise RuntimeError("SWASHES executable not found.")
+        self.sbin = swashes_bin
+        self.out = []
+        self._compute()
+
+    def _compute(self):
         """compute an analytic solution.
         Keep the results in a list of lists
         """
         comment_char = '#'
-        proc = subprocess.run([self.sbin]+self.params, encoding="utf-8",
-                              stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        if proc.stderr:
-            sys.exit(proc.stderr.strip())
+        # convert to str to run the subprocess
+        run_cmd = [self.sbin] + [str(p) for p in self.params]
+        try:
+            proc = subprocess.run(run_cmd, encoding="utf-8",
+                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                  check=True)
+        except subprocess.CalledProcessError as cperr:
+            cperr_str = ("swashes returned an error: <{}>. "
+                         "Calling parameters: {}".format(cperr.stderr.strip(),
+                                                         self.params))
+            raise RuntimeError(cperr_str)
         else:
             out_lines = proc.stdout.splitlines()
         header_line = None

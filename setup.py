@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import io
@@ -35,9 +35,10 @@ metadata = dict(name='pyswashes',
                 license='GPLv3',
                 classifiers=CLASSIFIERS,
                 keywords='science engineering hydraulics',
-                packages=find_packages(),
                 install_requires=REQUIRES,
                 include_package_data=True,
+                packages=find_packages('src'),
+                package_dir={'': 'src'}
                 )
 
 
