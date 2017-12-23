@@ -1,0 +1,16 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: continuumio/miniconda3
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: install dependencies
+          command: |
+            conda install swashes virtualenv -y
+            pip install tox
+      - run:
+          name: test
+          command: tox
