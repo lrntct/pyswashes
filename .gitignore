@@ -2,3 +2,5 @@ pyswashes.egg-info/
 build/
 dist/
 *.pyc
+.tox/
+.cache/
