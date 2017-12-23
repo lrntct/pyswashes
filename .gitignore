@@ -4,3 +4,6 @@ dist/
 *.pyc
 .tox/
 .cache/
+.coverage
+coverage.xml
+docs/_build/
