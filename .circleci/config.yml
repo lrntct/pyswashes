@@ -9,7 +9,8 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            conda install swashes virtualenv -y
+            conda install virtualenv -y
+            conda install -c lrntct swashes
             pip install tox
       - run:
           name: test
