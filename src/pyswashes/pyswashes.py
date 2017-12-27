@@ -144,11 +144,16 @@ class SWASHES(object):
         csv_file = StringIO(self.csv())
         return pd.read_csv(csv_file, index_col=0)
 
+    def np_array(self, value):
+        """return a nunpy ndarray of the given value
+        """
+        df = self.dataframe()
+        return df[value].values
+
     def topo(self):
         """return a numpy array of the topography
         """
-        df = self.dataframe()
-        return df[GD_ELEVATION].values
+        return self.np_array(GD_ELEVATION)
 
 
 class OneDimensional(SWASHES):
@@ -185,11 +190,10 @@ class TwoDimensional(SWASHES):
         csv = StringIO(self.csv())
         return pd.read_csv(csv, index_col=[0,1])
 
-    def topo(self):
-        """return a numpy array of the topography
+    def np_array(self, value):
+        """return a numpy array of the given value
         """
         # return the indices as columns
         df = self.dataframe().reset_index(drop=False)
         # pivot and get the values as a numpy ndarray
-        return df.pivot(index=Y, columns=X, values=GD_ELEVATION).values
-
+        return df.pivot(index=Y, columns=X, values=value).values
