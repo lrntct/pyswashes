@@ -16,18 +16,18 @@ import sys, os
 import shutil
 from io import StringIO
 import subprocess
+import platform
 
 import pandas
 
 
-
 class SWASHES(object):
-    """An interface to a SWASHES analytic solution
+    """A base class to interface with a SWASHES analytic solution.
     """
     DIMENSION_OK = [1., 1.5, 2.]
 
     def __init__(self, dimension, stype, domain, choice,
-                 num_cell_x, num_cell_y=None, swashes_bin='swashes'):
+                 num_cell_x, num_cell_y=None, swashes_bin=''):
         # input sanity check
         if float(dimension) not in self.DIMENSION_OK:
             raise ValueError("<dimension> must be in ".format(self.DIMENSION_OK))
@@ -41,12 +41,28 @@ class SWASHES(object):
             raise ValueError("bidimensional solutions need a positive <num_cell_y>")
         self.params = [dimension] + input_int
 
-        # check if the executable exists
-        if not shutil.which(swashes_bin):
-            raise RuntimeError("SWASHES executable not found.")
-        self.sbin = swashes_bin
+        # set the executable
+        self._set_executable(path_to_bin=swashes_bin)
+
         self.out = []
+        # compute the solution
         self._compute()
+
+    def _set_executable(self, path_to_bin=''):
+        """
+        """
+        os = platform.system()
+        if path_to_bin:
+            self.swashes_bin = path_to_bin
+        elif os == 'Windows':
+            self.swashes_bin = 'swashes.exe'
+        else:
+            self.swashes_bin = 'swashes'
+        # check if the executable exists
+        if not shutil.which(self.swashes_bin):
+            raise RuntimeError("SWASHES executable not found: {}"
+                               "".format(self.swashes_bin))
+        return self
 
     def _compute(self):
         """compute an analytic solution.
@@ -54,7 +70,7 @@ class SWASHES(object):
         """
         comment_char = '#'
         # convert to str to run the subprocess
-        run_cmd = [self.sbin] + [str(p) for p in self.params]
+        run_cmd = [self.swashes_bin] + [str(p) for p in self.params]
         try:
             proc = subprocess.run(run_cmd, encoding="utf-8",
                                   stdout=subprocess.PIPE, stderr=subprocess.PIPE,
@@ -79,7 +95,7 @@ class SWASHES(object):
                 self.out.append(current_line.split())
         return self
 
-    def get_csv(self):
+    def csv(self):
         """return the results as a csv
         """
         csv_lines = []
@@ -87,8 +103,36 @@ class SWASHES(object):
             csv_lines.append(','.join(line))
         return os.linesep.join(csv_lines)
 
-    def get_dataframe(self):
+    def dataframe(self):
         """return a pandas DataFrame
         """
-        csv = StringIO(self.get_csv())
-        return pandas.read_csv(csv, index_col=0)
+        csv_file = StringIO(self.csv())
+        return pandas.read_csv(csv_file, index_col=0)
+
+
+class OneDimensional(SWASHES):
+    """an interface to one-dimensional solutions
+    """
+    def __init__(self, stype, domain, choice, num_cell_x):
+        SWASHES.__init__(self, 1., stype, domain, choice, num_cell_x)
+
+
+class PseudoTwoDimensional(SWASHES):
+    """an interface to pseudo two-dimensional solutions
+    """
+    def __init__(self, stype, domain, choice, num_cell_x):
+        SWASHES.__init__(self, 1.5, stype, domain, choice, num_cell_x)
+
+
+class TwoDimensional(SWASHES):
+    """an interface to two-dimensional solutions
+    """
+    def __init__(self, stype, domain, choice, num_cell_x, num_cell_y):
+        SWASHES.__init__(self, 2., stype, domain, choice, num_cell_x, num_cell_y)
+
+    def dataframe(self):
+        """return a pandas DataFrame.
+        Two indices because it's 2D.
+        """
+        csv = StringIO(self.csv())
+        return pandas.read_csv(csv, index_col=[0,1])
