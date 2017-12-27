@@ -18,13 +18,34 @@ from io import StringIO
 import subprocess
 import platform
 
-import pandas
+import pandas as pd
+import numpy as np
+
+
+# columns names
+X = 'x'
+Y = 'y'
+DEPTH = 'depth'
+HEAD = 'head'
+CRIT_HEAD = 'crit_head'
+VEL1D = 'u'
+VEL_X = 'u'  # solution.cpp: u, flow velocity in x
+VEL_Y = 'v'  # solution.cpp: v, flow velocity in y
+VEL2D = 'U'  # velocity norm
+GD_ELEVATION = 'gd_elev'
+FLOW = 'q'
+FLOW_X = 'qx'
+FLOW_Y = 'qy'
+FROUDE = 'Froude'
 
 
 class SWASHES(object):
     """A base class to interface with a SWASHES analytic solution.
     """
     DIMENSION_OK = [1., 1.5, 2.]
+    COLS = {'(i-0.5)*dx': X, 'h[i]': DEPTH, 'u[i]': VEL1D,
+            'topo[i]': GD_ELEVATION, 'q[i]': FLOW, 'topo[i]+h[i]': HEAD,
+            'Fr[i]=Froude': FROUDE, 'topo[i]+hc[i]': CRIT_HEAD}
 
     def __init__(self, dimension, stype, domain, choice,
                  num_cell_x, num_cell_y=None, swashes_bin=''):
@@ -101,7 +122,8 @@ class SWASHES(object):
                 pass
             # get the columns headers
             if current_line.startswith(c_char) and not next_line.startswith(c_char):
-                col_headers = current_line.lstrip(c_char).split()
+                raw_col_headers = current_line.lstrip(c_char).split()
+                col_headers = [self.COLS[h] for h in raw_col_headers]
                 self.results.append(col_headers)
             # get results
             if not current_line.startswith(c_char):
@@ -120,7 +142,13 @@ class SWASHES(object):
         """return a pandas DataFrame
         """
         csv_file = StringIO(self.csv())
-        return pandas.read_csv(csv_file, index_col=0)
+        return pd.read_csv(csv_file, index_col=0)
+
+    def topo(self):
+        """return a numpy array of the topography
+        """
+        df = self.dataframe()
+        return df[GD_ELEVATION].values
 
 
 class OneDimensional(SWASHES):
@@ -140,6 +168,13 @@ class PseudoTwoDimensional(SWASHES):
 class TwoDimensional(SWASHES):
     """an interface to two-dimensional solutions
     """
+
+    COLS = {'(i-0.5)*dx': X, '(j-0.5)*dy': Y, 'h[i][j]': DEPTH,
+            'u[i][j]': VEL_X, 'v[i][j]': VEL_Y,
+            'topo[i][j]+h[i][j]': HEAD, 'topo[i][j]': GD_ELEVATION,
+            '||U||[i][j]': VEL2D, 'Fr[i][j]': FROUDE,
+            'qx[i][j]': FLOW_X, 'qy[i][j]': FLOW_Y, 'q[i][j]': FLOW}
+
     def __init__(self, stype, domain, choice, num_cell_x, num_cell_y):
         SWASHES.__init__(self, 2., stype, domain, choice, num_cell_x, num_cell_y)
 
@@ -148,4 +183,13 @@ class TwoDimensional(SWASHES):
         Two indices because it's 2D.
         """
         csv = StringIO(self.csv())
-        return pandas.read_csv(csv, index_col=[0,1])
+        return pd.read_csv(csv, index_col=[0,1])
+
+    def topo(self):
+        """return a numpy array of the topography
+        """
+        # return the indices as columns
+        df = self.dataframe().reset_index(drop=False)
+        # pivot and get the values as a numpy ndarray
+        return df.pivot(index=Y, columns=X, values=GD_ELEVATION).values
+
