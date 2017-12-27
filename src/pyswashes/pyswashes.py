@@ -155,6 +155,11 @@ class SWASHES(object):
         """
         return self.np_array(GD_ELEVATION)
 
+    def depth(self):
+        """return a numpy array of the topography
+        """
+        return self.np_array(DEPTH)
+
 
 class OneDimensional(SWASHES):
     """an interface to one-dimensional solutions
