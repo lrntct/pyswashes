@@ -14,11 +14,11 @@ def test_1d_dataframe():
     s.dataframe()
 
 
-def test_PseudoTwoDimensional_dataframe():
+def test_15d_dataframe():
     s = pyswashes.PseudoTwoDimensional(1, 1, 1, 10)
     s.dataframe()
 
 
-def test_TwoDimensional_dataframe():
+def test_2d_dataframe():
     s = pyswashes.TwoDimensional(1, 1, 1, 10, 10)
     s.dataframe()
