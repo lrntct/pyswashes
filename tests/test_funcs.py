@@ -32,39 +32,49 @@ def test_2d_dataframe():
 
 def test_1d_topo():
     s = pyswashes.OneDimensional(1, 1, 2, 10)
-    arr = s.topo()
+    arr = s.np_topo()
     assert isinstance(arr, np.ndarray)
     assert arr.ndim == 1
 
 
 def test_15d_topo():
     s = pyswashes.PseudoTwoDimensional(1, 1, 1, 10)
-    arr = s.topo()
+    arr = s.np_topo()
     assert isinstance(arr, np.ndarray)
 
 
 def test_2d_topo():
     s = pyswashes.TwoDimensional(1, 1, 1, 10, 10)
-    arr = s.topo()
+    arr = s.np_topo()
     assert isinstance(arr, np.ndarray)
     assert arr.ndim == 2
 
 
 def test_1d_depth():
     s = pyswashes.OneDimensional(1, 1, 2, 10)
-    arr = s.depth()
+    arr = s.np_depth()
     assert isinstance(arr, np.ndarray)
     assert arr.ndim == 1
 
 
 def test_15d_depth():
     s = pyswashes.PseudoTwoDimensional(1, 1, 1, 10)
-    arr = s.depth()
+    arr = s.np_depth()
     assert isinstance(arr, np.ndarray)
 
 
 def test_2d_depth():
     s = pyswashes.TwoDimensional(1, 1, 1, 10, 10)
-    arr = s.depth()
+    arr = s.np_depth()
     assert isinstance(arr, np.ndarray)
     assert arr.ndim == 2
+
+
+def test_1d_ascii():
+    s = pyswashes.OneDimensional(1, 1, 2, 10)
+    s.ascii_grid('gd_elev', 'dem_test.asc')
+
+
+def test_2d_ascii():
+    s = pyswashes.TwoDimensional(1, 1, 1, 10, 10)
+    s.ascii_grid('gd_elev', 'dem_test.asc')

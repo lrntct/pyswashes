@@ -66,10 +66,12 @@ class SWASHES(object):
         self._set_executable(path_to_bin=swashes_bin)
 
         # parameters of the domain
-        self.domain_parameters = {'length': None, 'width': None,
-                                  'stepx': None, 'stepy': None,
-                                  'ncellx': None, 'ncelly': None}
+        self.dom_params = {'length': None, 'width': None,
+                           'dx': None, 'dy': None,
+                           'ncellx': None, 'ncelly': None}
 
+        # value to replace nan with in ascii grid raster
+        self.nan_val = -99999
         self.generated_by = None
         self.results = []
         self.raw_comments = []
@@ -148,8 +150,8 @@ class SWASHES(object):
 
         sol_param_keys = {'length': ['Length of the domain:'],
                           'width': ['Width of the domain:'],
-                          'stepx': ['Space step in x:', 'Space step:'],
-                          'stepy': ['Space step in y:'],
+                          'dx': ['Space step in x:', 'Space step:'],
+                          'dy': ['Space step in y:'],
                           'ncellx': ['Number of cells in x:',
                                      'Number of cells:'],
                           'ncelly': ['Number of cells in y:']
@@ -170,11 +172,11 @@ class SWASHES(object):
             for key, keywords in sol_param_keys.items():
                 for keyword in keywords:
                     if current_line.startswith(keyword):
-                        self.domain_parameters[key] = self.get_number_from_str(current_line)
-        # Verify parameters
-        assert self.domain_parameters['ncellx'] == float(self.params[4])
-        if self.domain_parameters['ncelly'] is not None:
-            assert self.domain_parameters['ncelly'] == float(self.params[5])
+                        self.dom_params[key] = self.get_number_from_str(current_line)
+        # Verify domain parameters
+        assert self.dom_params['ncellx'] == float(self.params[4])
+        if self.dom_params['ncelly'] is not None:
+            assert self.dom_params['ncelly'] == float(self.params[5])
         return self
 
     def csv(self):
@@ -192,17 +194,19 @@ class SWASHES(object):
         return pd.read_csv(csv_file, index_col=0)
 
     def np_array(self, value):
-        """return a nunpy ndarray of the given value
+        """return a numpy ndarray of the given value
         """
         df = self.dataframe()
-        return df[value].values
+        ndarray = df[value].values
+        assert ndarray.ndim in [1, 2]
+        return ndarray
 
-    def topo(self):
+    def np_topo(self):
         """return a numpy array of the topography
         """
         return self.np_array(GD_ELEVATION)
 
-    def depth(self):
+    def np_depth(self):
         """return a numpy array of the topography
         """
         return self.np_array(DEPTH)
@@ -213,6 +217,34 @@ class OneDimensional(SWASHES):
     """
     def __init__(self, stype, domain, choice, num_cell_x):
         SWASHES.__init__(self, 1., stype, domain, choice, num_cell_x)
+
+    def ascii_grid(self, value, filename, nrows=3):
+        """write an ascii grid string of the given value
+        pad the array to nrows
+        """
+        # get the numpy array and replace nan
+        arr = self.np_array(value)
+        arr[np.isnan(arr)] = self.nan_val
+        # add dimension and pad
+        if arr.ndim == 1:
+            arr = arr[np.newaxis]
+            arr = np.pad(arr, ((nrows-1, 0), (0,0)), mode='edge')
+            assert nrows == arr.shape[0]
+            assert int(self.dom_params['ncellx']) == arr.shape[1]
+        else:
+            raise RuntimeError("Expected one-dimensional array")
+        # header
+        ncols = "NCOLS {}\n".format(int(self.dom_params['ncellx']))
+        nrows = "NROWS {}\n".format(int(nrows))
+        xll = "XLLCORNER 0.0\nYLLCORNER 0.0\n"  # coordinates origin to 0
+        # in one-dimensions, cells are squared
+        dx = "CELLSIZE {}\n".format(self.dom_params['dx'])
+        nodata = "NODATA_VALUE {}\n".format(self.nan_val)
+        header = ncols + nrows + xll + dx + nodata
+        # writing file
+        np.savetxt(filename, arr, fmt='%.6f',
+                   header=header, comments='')
+        return self
 
 
 class PseudoTwoDimensional(SWASHES):
@@ -249,3 +281,24 @@ class TwoDimensional(SWASHES):
         df = self.dataframe().reset_index(drop=False)
         # pivot and get the values as a numpy ndarray
         return df.pivot(index=Y, columns=X, values=value).values
+
+    def ascii_grid(self, value, filename):
+        """write an ascii grid string of the given value
+        """
+        # get the numpy array and replace nan
+        ndarr = self.np_array(value)
+        ndarr[np.isnan(ndarr)] = self.nan_val
+        # header
+        assert int(self.dom_params['ncellx']) == ndarr.shape[1]
+        assert int(self.dom_params['ncelly']) == ndarr.shape[0]
+        ncols = "NCOLS {}\n".format(int(self.dom_params['ncellx']))
+        nrows = "NROWS {}\n".format(int(self.dom_params['ncelly']))
+        xll = "XLLCORNER 0.0\nYLLCORNER 0.0\n"  # no coordinates
+        dx = "DX {}\n".format(self.dom_params['dx'])
+        dy = "DY {}\n".format(self.dom_params['dy'])
+        nodata = "NODATA_VALUE {}\n".format(self.nan_val)
+        header = ncols + nrows + xll + dx + dy + nodata
+        # writing file
+        np.savetxt(filename, ndarr, fmt='%.6f',
+                   header=header, comments='')
+        return self
