@@ -1,9 +1,11 @@
-"""Test the entry parameters of the SWASHES object
+"""Test the classes and their methods
 """
 
-import pyswashes
+import pytest
 import numpy as np
 import pandas as pd
+
+import pyswashes
 
 
 def test_swashes_dataframe():
@@ -29,6 +31,10 @@ def test_2d_dataframe():
     df = s.dataframe()
     assert isinstance(df, pd.DataFrame)
 
+def test_1d_nparray_wrong_value():
+    s = pyswashes.OneDimensional(1, 1, 2, 10)
+    with pytest.raises(ValueError, message="Expecting ValueError"):
+        arr = s.np_array(value='not_the_right_str')
 
 def test_1d_topo():
     s = pyswashes.OneDimensional(1, 1, 2, 10)
