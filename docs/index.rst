@@ -5,8 +5,9 @@ Welcome to pyswashes
 
 pyswashes is a python library that generates analytic solutions to the Shallow Water Equations.
 
-Documentation on `read the docs  <http://pyswashes.rtfd.io/>`_
 It is available on the `Python package index <https://pypi.python.org/pypi/pyswashes>`_
+
+The code is hosted on `GitHub <https://github.com/lrntct/pyswashes>`_
 
 It is an interface to the `SWASHES command line tool <https://sourcesup.renater.fr/projects/swashes/>`_
 created by the University of Orléans, France.
@@ -21,8 +22,10 @@ SWASHES is detailled in the following article:
 
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Contents:
+
+   api
 
 
 
