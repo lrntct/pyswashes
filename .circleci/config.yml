@@ -1,5 +1,5 @@
 defaults: &defaults
-  working_directory: /tmp
+  working_directory: ~/repo
   docker:
     - image: continuumio/miniconda3
 
@@ -19,13 +19,13 @@ jobs:
           name: test
           command: tox
       - persist_to_workspace:
-          root: /tmp
+          root: ~/repo
 
   upload:
     <<: *defaults
     steps:
       - attach_workspace:
-          at: /tmp
+          at: ~/repo
       - run:
         name: build pypi package
         command: python setup.py sdist
