@@ -19,7 +19,9 @@ jobs:
           name: run tests
           command: tox
       - persist_to_workspace:
-          root: ~/repo
+          root: ~/repo/
+          paths:
+            - "./*"
 
   upload:
     <<: *defaults
