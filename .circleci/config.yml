@@ -10,13 +10,13 @@ jobs:
     steps:
       - checkout
       - run:
-          name: install_dependencies
+          name: install dependencies
           command: |
             conda install virtualenv -y
             conda install -c lrntct swashes
             pip install tox
       - run:
-          name: test
+          name: run tests
           command: tox
       - persist_to_workspace:
           root: ~/repo
