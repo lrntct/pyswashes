@@ -1,5 +1,5 @@
-API
-===
+Reference manual
+================
 
 .. automodule:: pyswashes.pyswashes
     :members:

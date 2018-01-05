@@ -5,15 +5,40 @@ Welcome to pyswashes
 
 pyswashes is a python library that generates analytic solutions to the Shallow Water Equations.
 
-It is available on the `Python package index <https://pypi.python.org/pypi/pyswashes>`_
+With it to can obtain the selected analytic solution in the form of a csv, Pandas dataframe, NumPy array or ASCII Grid format.
 
-The code is hosted on `GitHub <https://github.com/lrntct/pyswashes>`_
+The code is hosted on `GitHub <https://github.com/lrntct/pyswashes>`_.
 
-It is an interface to the `SWASHES command line tool <https://sourcesup.renater.fr/projects/swashes/>`_
+
+
+Installation
+============
+
+pyswashes is available on the `Python package index <https://pypi.python.org/pypi/pyswashes>`_
+and `anaconda <https://anaconda.org/lrntct/pyswashes>`_.
+
+Installation with conda
+-----------------------
+
+It is recommended to install it through `conda`,
+because it relies on the `swashes` package that cannot be installed with `pip`.
+
+    conda install -c lrntct pyswashes
+
+
+Installation with ppi
+---------------------
+
+    pip install pyswashes
+
+
+Acknowledgements
+================
+
+pyswashes is an interface to the `SWASHES <https://sourcesup.renater.fr/projects/swashes/>`_ command line tool,
 created by the University of Orléans, France.
 
-
-SWASHES is detailled in the following article:
+SWASHES is detailed in the following article:
 
    SWASHES: a compilation of Shallow Water Analytic Solutions for Hydraulic and Environmental Studies',
    O. Delestre, C. Lucas, P.-A. Ksinant, F. Darboux, C. Laguerre, T.N.T. Vo, F. James, S. Cordier
@@ -21,16 +46,15 @@ SWASHES is detailled in the following article:
    DOI: 10.1002/fld.3741 . URL: http://hal.archives-ouvertes.fr/hal-00628246
 
 
+Indices and tables
+==================
+
 .. toctree::
    :maxdepth: 3
    :caption: Contents:
 
    api
 
-
-
-Indices and tables
-==================
 
 * :ref:`genindex`
 .. ~ * :ref:`modindex`
