@@ -33,7 +33,9 @@ jobs:
           command: python setup.py sdist
       - run:
           name: upload pypi package
-          command: python ci-tools/package-upload.py pypi
+          command: |
+            pip install twine
+            python ci-tools/package-upload.py pypi
       - run:
           name: build conda package
           command: |
@@ -46,7 +48,7 @@ jobs:
 
 workflows:
   version: 2
-# test every commit, upload only tags
+  # test every commit, upload only tags
   test-n-upload:
     jobs:
       - test:
@@ -58,6 +60,7 @@ workflows:
             - test
           filters:
             tags:
-              only: /.*/
+              # should match simple semver
+              only: /\d+\.\d+\.\d+/
             branches:
               ignore: /.*/
