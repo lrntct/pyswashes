@@ -52,12 +52,12 @@ workflows:
       - test:
           filters:
             tags:
-              only: /.*/
+              only: /*/
       - upload:
           requires:
             - test
           filters:
             tags:
-              only: /.*/
+              only: /*.*.*/
             branches:
               ignore: /.*/
