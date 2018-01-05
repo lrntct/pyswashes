@@ -29,16 +29,16 @@ jobs:
       - attach_workspace:
           at: ~/repo
       - run:
-        name: build pypi package
-        command: python setup.py sdist
+          name: build pypi package
+          command: python setup.py sdist
       - run:
           name: upload pypi package
           command: python ci-tools/package-upload.py pypi
       - run:
-        name: build conda package
-        command: |
-          conda install conda-build anaconda-client -y
-          conda-build conda.recipe
+          name: build conda package
+          command: |
+            conda install conda-build anaconda-client -y
+            conda-build conda.recipe
       - run:
           name: upload conda package
           command: python ci-tools/package-upload.py conda
@@ -52,12 +52,12 @@ workflows:
       - test:
           filters:
             tags:
-              only: /*/
+              only: /.*/
       - upload:
           requires:
             - test
           filters:
             tags:
-              only: /*.*.*/
+              only: /.*/
             branches:
               ignore: /.*/
