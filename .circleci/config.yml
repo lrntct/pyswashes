@@ -1,13 +1,16 @@
+defaults: &defaults
+  working_directory: /tmp
+  docker:
+    - image: continuumio/miniconda3
+
 version: 2
 jobs:
-  build:
-    docker:
-      - image: continuumio/miniconda3
-    working_directory: ~/repo
+  test:
+    <<: *defaults
     steps:
       - checkout
       - run:
-          name: install dependencies
+          name: install_dependencies
           command: |
             conda install virtualenv -y
             conda install -c lrntct swashes
@@ -15,3 +18,44 @@ jobs:
       - run:
           name: test
           command: tox
+      - persist_to_workspace:
+          root: /tmp
+
+  upload:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: /tmp
+      - run:
+        name: build pypi package
+        command: python setup.py sdist
+      - run:
+          name: upload pypi package
+          command: python ci-tools/package-upload.py pypi
+      - run:
+        name: build conda package
+        command: |
+          conda install conda-build anaconda-client -y
+          conda-build conda.recipe
+      - run:
+          name: upload conda package
+          command: python ci-tools/package-upload.py conda
+
+
+workflows:
+  version: 2
+# test every commit, upload only tags
+  test-n-upload:
+    jobs:
+      - test:
+          filters:
+            tags:
+              only: /.*/
+      - upload:
+          requires:
+            - test
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
