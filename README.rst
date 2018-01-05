@@ -3,7 +3,8 @@
 pyswashes is a python library that generates analytic solutions to the
 Shallow Water Equations
 
-It is based on the `SWASHES software <https://sourcesup.renater.fr/projects/swashes/>`_.
+The code is hosted on `GitHub <https://github.com/lrntct/pyswashes>`_.
+For more information, please see the `documentation <https://pyswashes.readthedocs.io>`_.
 
 
 .. |CircleCI| image:: https://circleci.com/gh/lrntct/pyswashes.svg?style=svg
