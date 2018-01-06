@@ -6,7 +6,7 @@ import glob
 import subprocess
 import traceback
 
-token = os.environ['ANACONDA_TOKEN']
+token = os.getenv('ANACONDA_TOKEN')
 
 def upload_anaconda():
     file_glob = "pyswashes-*.tar.bz2"
@@ -25,10 +25,7 @@ def upload_anaconda():
 
 
 def upload_pypi():
-    pypi_user = os.environ['PYPI_USER']
-    pypi_pwd = os.environ['PYPI_PWD']
-    path_glob = os.path.join('dist','*')
-    return ['twine', 'upload', '-u', pypi_user, '-p', pypi_pwd, path_glob]
+    pass
 
 
 def main():
@@ -39,10 +36,7 @@ def main():
     elif pkg_type == 'pypi':
         cmd = upload_pypi()
     # execute cmd
-    try:
-        subprocess.check_call(cmd)
-    except subprocess.CalledProcessError:
-        traceback.print_exc()
+    subprocess.check_call(cmd)
 
 
 if __name__ == "__main__":

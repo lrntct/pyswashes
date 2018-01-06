@@ -35,11 +35,12 @@ jobs:
           name: upload pypi package
           command: |
             pip install twine
-            python ci-tools/package-upload.py pypi
+            twine upload -u $PYPI_USER -p $PYPI_PWD dist/*
       - run:
           name: build conda package
           command: |
             conda install conda-build anaconda-client -y
+            conda config --add channels lrntct
             conda-build conda.recipe
       - run:
           name: upload conda package

@@ -6,8 +6,8 @@ from setuptools import setup, find_packages
 
 # see setup.cfg
 metadata = dict(packages=find_packages('src'),
-                package_dir={'': 'src'}
-               )
+                package_dir={'': 'src'},
+                url="https://pyswashes.readthedocs.io")
 
 
 setup(**metadata)
