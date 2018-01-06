@@ -35,7 +35,7 @@ jobs:
           name: upload pypi package
           command: |
             pip install twine
-            twine upload -u $PYPI_USER -p $PYPI_PWD dist/*
+            twine upload --skip-existing -u $PYPI_USER -p $PYPI_PWD dist/*
       - run:
           name: build conda package
           command: |
