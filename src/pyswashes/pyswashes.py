@@ -13,7 +13,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """An interface to the SWASHES software,
-a collection of analytics solutions to the shallow water equations.
+a collection of analytic solutions to the shallow water equations.
 """
 
 import os
@@ -47,7 +47,7 @@ class SWASHES(object):
     A base class that interfaces with a SWASHES analytic solution.
 
     Please use `OneDimensional`, `PseudoTwoDimensional`
-    and `TwoDimensional` for daily use, as they oveload some methods of the base class.
+    and `TwoDimensional` for daily use, as they overload some methods of the base class.
 
     Parameters
     ----------
@@ -56,9 +56,9 @@ class SWASHES(object):
     stype : int
         The type of the solution.
     domain : int
-        The type of the solution.
+        The domain of the solution.
     choice : int
-        The type of the solution.
+        The choice of solution.
     num_cell_x : int
         The number of cells in the X dimension.
     num_cell_y : int, optional
@@ -73,7 +73,7 @@ class SWASHES(object):
     Attributes
     ----------
     dom_params : dictionary
-        The paramters of the domain.
+        The parameters of the domain.
 
     Raises
     ------
@@ -229,7 +229,7 @@ class SWASHES(object):
         return self
 
     def cols(self):
-        """Return a list of the available values
+        """Return a list of the available values.
 
         Returns
         -------
@@ -255,7 +255,7 @@ class SWASHES(object):
         -------
         str
             Values are separated by a comma.
-            Lines are separated by a os specific line separator.
+            Lines are separated by an OS specific line separator.
 
         Examples
         --------
@@ -431,14 +431,17 @@ class SWASHES(object):
 class OneDimensional(SWASHES):
     """A one-dimensional analytic solution.
 
+    To select `stype`, `domain` and `choice`,
+    please refer to the SWASHES manual.
+
     Parameters
     ----------
     stype : int
         The type of the solution.
     domain : int
-        The type of the solution.
+        The domain of the solution.
     choice : int
-        The type of the solution.
+        The choice of solution.
     num_cell_x : int
         The number of cells in the X dimension.
     swashes_bin : str, optional
@@ -494,9 +497,9 @@ class OneDimensional(SWASHES):
                          swashes_bin=swashes_bin)
 
     def ascii_grid(self, value, filename, nrows=3):
-        """Write an ascii grid file GIS file.
+        """Write an ascii grid GIS file.
 
-        The lowest left corner is set to 0,0 coordinates.
+        The lowest left corner is set to the coordinates 0,0.
 
         Parameters
         ----------
@@ -556,14 +559,17 @@ class OneDimensional(SWASHES):
 class PseudoTwoDimensional(SWASHES):
     """A pseudo two-dimensional analytic solution.
 
+    To select `stype`, `domain` and `choice`,
+    please refer to the SWASHES manual.
+
     Parameters
     ----------
     stype : int
         The type of the solution.
     domain : int
-        The type of the solution.
+        The domain of the solution.
     choice : int
-        The type of the solution.
+        The choice of solution.
     num_cell_x : int
         The number of cells in the X dimension.
     swashes_bin : str, optional
@@ -623,14 +629,17 @@ class PseudoTwoDimensional(SWASHES):
 class TwoDimensional(SWASHES):
     """A two-dimensional analytic solution.
 
+    To select `stype`, `domain` and `choice`,
+    please refer to the SWASHES manual.
+
     Parameters
     ----------
     stype : int
         The type of the solution.
     domain : int
-        The type of the solution.
+        The domain of the solution.
     choice : int
-        The type of the solution.
+        The choice of solution.
     num_cell_x : int
         The number of cells in the X dimension.
     num_cell_y : int
@@ -751,9 +760,9 @@ class TwoDimensional(SWASHES):
         return df.pivot(index=Y, columns=X, values=value).values
 
     def ascii_grid(self, value, filename):
-        """Write an ascii grid file GIS file.
+        """Write an ascii grid GIS file.
 
-        The lowest left corner is set to 0,0 coordinates.
+        The lowest left corner is set to the coordinates 0,0.
 
         Parameters
         ----------
