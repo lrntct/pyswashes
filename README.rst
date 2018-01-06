@@ -11,7 +11,7 @@ For more information, please see the `documentation <https://pyswashes.readthedo
    :alt: PyPI version
 .. |anaconda| image:: https://anaconda.org/lrntct/swashes/badges/installer/conda.svg
    :target: https://anaconda.org/lrntct/pyswashes
-   :alt: PyPI version
+   :alt: Install with Anaconda
 .. |CircleCI| image:: https://circleci.com/gh/lrntct/pyswashes.svg?style=svg
    :target: https://circleci.com/gh/lrntct/pyswashes
    :alt: CircleCI status
