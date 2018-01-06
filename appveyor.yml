@@ -34,6 +34,7 @@ install:
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   # Install dependencies and build
   - "%CMD_IN_ENV% conda install conda-build anaconda-client -q -y"
+  - "%CMD_IN_ENV% conda config --add channels lrntct
   - "%CMD_IN_ENV% conda-build conda.recipe"
 
 build: false
