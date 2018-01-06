@@ -1,5 +1,6 @@
 [run]
 omit = 
+    */ci-tools/*
     */setup.py
     */pandas/*
     */numpy/*
