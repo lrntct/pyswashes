@@ -47,7 +47,7 @@ class SWASHES(object):
     A base class that interfaces with a SWASHES analytic solution.
 
     Please use `OneDimensional`, `PseudoTwoDimensional`
-    and `TwoDimensional` for daily use, as they overload some methods of the base class.
+    and `TwoDimensional` for normal use, as they overload some methods of the base class.
 
     Parameters
     ----------

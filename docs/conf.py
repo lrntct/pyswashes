@@ -80,7 +80,7 @@ todo_include_todos = False
 # Napoleon settings
 napoleon_numpy_docstring = True
 # Prevent import errors
-autodoc_mock_imports = ["numpy", "pandas"]
+autodoc_mock_imports = ["numpy", "pandas", "dateutil"]
 
 # -- Options for HTML output ----------------------------------------------
 
