@@ -4,8 +4,7 @@ Welcome to pyswashes
 |PyPI| |anaconda| |RTFD| |CircleCI| |AppVeyor| |codecov|
 
 pyswashes is a python library that generates analytic solutions to the Shallow Water Equations.
-
-With it to can obtain the selected analytic solution in the form of a csv, Pandas dataframe, NumPy array or ASCII Grid format.
+It facilitate the obtention of the selected analytic solution in the form of a csv, Pandas dataframe, NumPy array or ASCII Grid format.
 
 The code is hosted on `GitHub <https://github.com/lrntct/pyswashes>`_.
 
@@ -26,7 +25,7 @@ because it relies on the `swashes` package that cannot be installed with `pip`.
     conda install -c lrntct pyswashes
 
 
-Installation with ppi
+Installation with pip
 ---------------------
 
     pip install pyswashes
