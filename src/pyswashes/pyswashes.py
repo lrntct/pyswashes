@@ -354,11 +354,11 @@ class SWASHES(object):
         >>> import pyswashes
         >>> unidim = pyswashes.OneDimensional(2,1,2,6)
         >>> print(unidim.np_array('depth'))
-        [ 0.764586  0.87793   1.07331   1.07331   0.87793   0.764586]
+        [0.764586 0.87793  1.07331  1.07331  0.87793  0.764586]
 
         >>> pseudo2d = pyswashes.PseudoTwoDimensional(1,1,1,5)
         >>> print(pseudo2d.np_array('depth'))
-        [ 0.912229  1.0348    1.2       1.0348    0.912229]
+        [0.912229 1.0348   1.2      1.0348   0.912229]
 
         Raises
         ------
@@ -386,11 +386,11 @@ class SWASHES(object):
         >>> import pyswashes
         >>> unidim = pyswashes.OneDimensional(2,1,2,6)
         >>> print(unidim.np_topo())
-        [ 6.04563   4.85287   4.18056   3.70591   2.65771   0.885902]
+        [6.04563  4.85287  4.18056  3.70591  2.65771  0.885902]
 
         >>> pseudo2d = pyswashes.PseudoTwoDimensional(1,1,1,5)
         >>> print(pseudo2d.np_topo())
-        [ 1.64477   0.844012  0.314957  0.281316  0.093772]
+        [1.64477  0.844012 0.314957 0.281316 0.093772]
 
 
         It is equivalent to calling `np_array()` with the adequate `value` parameter:
@@ -414,11 +414,11 @@ class SWASHES(object):
         >>> import pyswashes
         >>> unidim = pyswashes.OneDimensional(2,1,2,6)
         >>> print(unidim.np_depth())
-        [ 0.764586  0.87793   1.07331   1.07331   0.87793   0.764586]
+        [0.764586 0.87793  1.07331  1.07331  0.87793  0.764586]
 
         >>> pseudo2d = pyswashes.PseudoTwoDimensional(1,1,1,5)
         >>> print(pseudo2d.np_depth())
-        [ 0.912229  1.0348    1.2       1.0348    0.912229]
+        [0.912229 1.0348   1.2      1.0348   0.912229]
 
         It is equivalent to calling `np_array()` with the adequate `value` parameter:
 
@@ -747,11 +747,11 @@ class TwoDimensional(SWASHES):
         >>> import pyswashes
         >>> s = pyswashes.TwoDimensional(1,1,1,5,5)
         >>> print(s.np_array('depth'))
-        [[ 0.     0.     0.     0.     0.   ]
-         [ 0.     0.     0.025  0.     0.   ]
-         [ 0.     0.025  0.125  0.025  0.   ]
-         [ 0.     0.     0.025  0.     0.   ]
-         [ 0.     0.     0.     0.     0.   ]]
+        [[0.    0.    0.    0.    0.   ]
+         [0.    0.    0.025 0.    0.   ]
+         [0.    0.025 0.125 0.025 0.   ]
+         [0.    0.    0.025 0.    0.   ]
+         [0.    0.    0.    0.    0.   ]]
 
         """
         # return the indices as columns

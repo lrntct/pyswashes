@@ -12,12 +12,12 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            conda install virtualenv -y
+            conda install pip
             conda install -c lrntct swashes
-            pip install tox
+            pip install pytest pytest-cov codecov -y
       - run:
           name: run tests
-          command: tox
+          command: pytest --cov=./ --cov-config .coveragerc --doctest-modules
       - persist_to_workspace:
           root: ~/repo/
           paths:

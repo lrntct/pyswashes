@@ -33,7 +33,7 @@ def test_2d_dataframe():
 
 def test_1d_nparray_wrong_value():
     s = pyswashes.OneDimensional(1, 1, 2, 10)
-    with pytest.raises(ValueError, message="Expecting ValueError"):
+    with pytest.raises(ValueError):
         arr = s.np_array(value='not_the_right_str')
 
 def test_1d_topo():
