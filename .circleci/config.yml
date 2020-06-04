@@ -12,7 +12,7 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            conda install pip -y
+            conda install pip numpy pandas -y
             conda install -c lrntct swashes
             pip install pytest pytest-cov codecov
       - run:
