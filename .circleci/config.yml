@@ -12,9 +12,9 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            conda install pip
+            conda install pip -y
             conda install -c lrntct swashes
-            pip install pytest pytest-cov codecov -y
+            pip install pytest pytest-cov codecov
       - run:
           name: run tests
           command: pytest --cov=./ --cov-config .coveragerc --doctest-modules
